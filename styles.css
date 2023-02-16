@@ -1,0 +1,212 @@
+body{
+
+    font-family: 'Roboto', sans-serif;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    
+}
+
+h1{
+  font-weight: bold;
+}
+
+p{
+    font-size: 1em;
+}
+
+.loading {
+
+  width: 20px;
+}
+
+.poster {
+
+width: 75%;
+filter: grayscale(80%);
+-webkit-filter: grayscale(70%);
+
+}
+
+.poster:hover {
+    
+    filter: none;
+    -webkit-filter: grayscale(-10%);
+    transition: 0.5s;
+}
+
+.container {
+
+    max-width: 300px;
+    display: inline-block;
+    align-content: space-around;
+    margin: 1em;
+}
+
+
+
+
+
+button {
+  align-items: center;
+  background-color: #FFFFFF;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: .25rem;
+  box-shadow: rgba(0, 0, 0, 0.02) 0 1px 3px 0;
+  box-sizing: border-box;
+  color: rgba(0, 0, 0, 0.85);
+  cursor: pointer;
+  display: inline-flex;
+  font-family: system-ui,-apple-system,system-ui,"Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  justify-content: center;
+  line-height: 1.25;
+  margin: 0;
+  min-height: 3rem;
+  padding: calc(.875rem - 1px) calc(1.5rem - 1px);
+  position: relative;
+  text-decoration: none;
+  transition: all 250ms;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: baseline;
+  width: auto;
+}
+
+
+
+
+ul {
+
+  padding-left: 0px;
+}
+
+li {
+  
+  
+  list-style: none;
+  padding-left: 0px;
+  
+}
+
+
+.watchlistItems{
+  margin-left: auto;
+  margin-right: auto;
+  display:flex;
+  align-content:space-around;
+  vertical-align: middle;
+  width: 60%;
+  padding-bottom: 2em;
+  
+}
+
+.watchlistPoster {
+
+  width:220px;
+  
+
+}
+
+.circle{
+
+border-radius: 25px;
+background: linear-gradient(to top, #ccffff 44%, #ffffff 100%);
+width: 50px;
+height: 50px;
+text-align: center !important;
+line-height: 50px;
+}
+
+.description{
+
+  margin-left: 2em;
+  text-align: left;
+ 
+}
+.userInterface{
+  
+  padding-top: 0.9em;
+  display: inline-block;
+  
+  
+}
+
+.watchable{
+  width: 35px;
+  
+}
+
+.youtube{
+  width: 35px;
+  
+}
+
+.trailer{
+  display: none;
+}
+
+
+.videoWindow{
+  width: 100%;
+}
+
+.swal-button {
+  display: none;
+}
+
+@media only screen and (max-width: 820px) {
+
+
+  body{
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .close{
+
+    text-align: left;
+
+  }
+  .watchlistItems{
+    display: block;
+    text-align: center;
+    
+    align-content:center;
+    width: 90%;
+    
+  }
+
+  p{
+    font-size: 0.8em;
+  }
+
+  .description{
+    margin: auto;
+    display: inline-block;
+    text-align: center;
+    margin-left: 0em;
+  }
+
+  .watchlistPoster {
+
+    width:50%;
+    
+  
+  }
+
+  li{
+    margin-left: 0em;
+    padding-left: 0em;
+  }
+
+  .circle{
+    margin: auto;
+  }
+
+  
+  
+}
