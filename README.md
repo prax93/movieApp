@@ -6,6 +6,7 @@ This project was used to learn Vanilla JS and how to create Docker Files
 - Lists trending movies and tv shows
 - Watch Trailers
 - Create a personal non persistent Watchlist
+- Popcorn Icon indicates whether the media is watch-worthy.
 
 ## How to install the movie app
 1. Get your tmdb Api key [here](https://developer.themoviedb.org/docs/getting-started)
