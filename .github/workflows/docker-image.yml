@@ -12,7 +12,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag movieapp:$(date +%s)
+      run: docker build . --file Dockerfile --tag movieapp
     - name: Run Movieapp
       run: docker run -d -p 80:80 movieapp
     - name: Curl Localhost
