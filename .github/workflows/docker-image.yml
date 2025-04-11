@@ -7,12 +7,13 @@ on:
     branches: [ "main" ]
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v4
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag movieapp:$(date +%s)
+    - name: Run Movieapp
+      run: docker run -d -p 80:80 movieapp
+    - name: Curl Localhost
+      run: curl localhost
