@@ -201,4 +201,4 @@ function getTrailer(movieTrailer, media){
         });
     });
 }
-}
+
