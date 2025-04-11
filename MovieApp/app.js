@@ -8,7 +8,6 @@ let watchList = [];
 document.getElementById('toWatch').style.display = "none";
 document.body.addEventListener('load', fetchMovies());
 document.getElementById('watchList').addEventListener('click', printWatchlist);
-env.printer();
 
 
 function fetchMovies(){
