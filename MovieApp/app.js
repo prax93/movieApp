@@ -1,3 +1,5 @@
+import {env} from './env.js'
+
 
 let movieList = [];
 let watchList = [];
@@ -6,20 +8,16 @@ let watchList = [];
 document.getElementById('toWatch').style.display = "none";
 document.body.addEventListener('load', fetchMovies());
 document.getElementById('watchList').addEventListener('click', printWatchlist);
-const listFormater = document.querySelector('li');
+env.printer();
+
 
 function fetchMovies(){
-    fetch('https://api.themoviedb.org/3/trending/all/week?api_key=224b2d4d126146f47deb3fdaeec5826b')
+    fetch('https://api.themoviedb.org/3/trending/all/week?api_key=' + env.apiKey)
     .then((res) => {
         return res.json(); 
-        //document.getElementById('output').style.display = "none";
     })
     .then((data) => {   
-
         const movies = data.results;
-
-        console.log(movies);
-
         movies.forEach(element => {
             let movieTitle;
             if(element.name==undefined){
@@ -29,21 +27,22 @@ function fetchMovies(){
             movieTitle = element.name;
             }
 
-            movieList.push(obj = {
+            movieList.push({
                 name: movieTitle, 
                 description: element.overview, 
                 poster: element.poster_path,
                 movieID: element.id, 
                 rating: element.vote_average, 
-                mediaType: JSON.stringify(element.media_type)
+                mediaType: element.media_type
             });
 
         });
-
-        console.log(movieList);
         return movieList;
 
-    }).then(printTrendingMovies)
+    })
+    .then(
+        printTrendingMovies
+    )
     .catch((error) => {
         console.error(error);
     });
@@ -51,11 +50,11 @@ function fetchMovies(){
 
 function printTrendingMovies(){
 
-    document.getElementById('output').style.display = "";
+    document.getElementById('output').style.display = "block";
     document.getElementById('loading').style.display = "none";
     let output1 = '';
-    popcorn = "./Popcorn_Time_logo.png";
-    youtube = "./youtube.png"; 
+    let popcorn = "./Popcorn_Time_logo.png";
+    let youtube = "./youtube.png"; 
 
     for (let index = 0; index < movieList.length; index++) {
         let imgsrc = "https://image.tmdb.org/t/p/original";
@@ -65,10 +64,10 @@ function printTrendingMovies(){
         <h3> ${movieList[index].name} </h3>
         <img class="poster" src="${imgsrc}${movieList[index].poster}">  
         <div>
-        <button id=${index} onclick="getMovieId()"> Add to Watchlist </button>
+        <button data-action="watchlist" data-content=${movieList[index].movieID}> Add to Watchlist </button>
         </div>
         <div class="userInterface">
-        <img class="youtube" id=${movieList[index].movieID} onclick=getTrailer(${movieList[index].movieID},${movieList[index].mediaType}) src=${youtube}>`;
+        <img class="youtube" data-action="trailer" data-content=${movieList[index].movieID}-${movieList[index].mediaType} src=${youtube}>`;
         
         if(movieList[index].rating>=7.0){
             output1 += `<img class="watchable" src="${popcorn}">`
@@ -79,19 +78,38 @@ function printTrendingMovies(){
         </div>`;
         
         document.getElementById('output').innerHTML = output1;
-    }  
+
+        const watchListButtons = document.querySelectorAll('[data-action="watchlist"]');
+        const trailerButtons = document.querySelectorAll('[data-action="trailer"]');
+
+        
+        watchListButtons.forEach(watchListButton => {
+            watchListButton.addEventListener('click', event => {
+
+                const movieId = event.target.getAttribute('data-content')
+                getMovieId(movieList.find(movie=> movie.movieID === Number(movieId)))
+        })
+        })
+
+        trailerButtons.forEach(trailerButton => {
+            trailerButton.addEventListener('click', event => {
+                const movie = event.target.getAttribute('data-content').split('-')
+                getTrailer(movie[0], movie[1])
+        })
+        })
+    }
 }
 
-function getMovieId(){
+function getMovieId(movie){
 
-    watchList.push(movieList[event.target.id]);
+    watchList.push(movie);
     let htmlp = document.createElement('li');
     let imgsrc = "https://image.tmdb.org/t/p/original" 
 
     for (let index = 0; index < watchList.length; index++) {
         var rating = watchList[index].rating;
         var rounded = Math.round(rating * 10) / 10
-        newimage = imgsrc+watchList[index].poster;
+        let newimage = imgsrc+watchList[index].poster;
         htmlp.innerHTML=`<li id="${watchList[index].name}">
         <h2>${watchList[index].name}</h3>
         <div class="watchlistItems" >
@@ -103,7 +121,7 @@ function getMovieId(){
         <div class="circle">${rounded}</div>
         
         <br>
-        <button onclick="deleteFromWatchList()" id="${watchList[index].name}">delete</button>
+        <button data-action="delete" id="${watchList[index].name}">delete</button>
         <div>
         </div>
         </div>
@@ -112,8 +130,16 @@ function getMovieId(){
         
         
     document.getElementById('content').append(htmlp);
-    
-    console.log(watchList);
+
+    const deleteButton = document.querySelectorAll('[data-action="delete"]');
+
+        
+    deleteButton.forEach(deleteButton => {
+            deleteButton.addEventListener('click', event => {
+                const movieId = event.target.getAttribute('id')
+                deleteFromWatchList(movieId)})
+        })
+
 }
 
 function printWatchlist() {
@@ -129,32 +155,20 @@ function printWatchlist() {
     });
 }
 
-function deleteFromWatchList() {
-
-    
-    index = event.target.id;
-    const element = document.getElementById(index);
-    console.log(index);
-
-  
-            
-            indexer = watchList.findIndex(rank => rank.name === index);
-            console.log(indexer);
-            
-            watchList.splice(indexer, 1);
-            console.log(watchList);
-
-    element.remove(); 
-
+function deleteFromWatchList(movieId) {
+    const element = document.getElementById(movieId);
+    const indexer = watchList.findIndex(rank => rank.name === movieId);
+    watchList.splice(indexer, 1);
+    element.remove();
 }
 
 function getTrailer(movieTrailer, media){
-
-    if (media == "movie"){
-
+    let trailerurl;
+    let youtubeUrl;
+    if (media === "movie"){
         trailerurl = "https://api.themoviedb.org/3/movie/"+movieTrailer+"/videos?api_key=224b2d4d126146f47deb3fdaeec5826b&language=en-US";
     }
-    else if (media == "tv"){
+    else if (media === "tv"){
         trailerurl =  "https://api.themoviedb.org/3/tv/"+movieTrailer+"/videos?api_key=224b2d4d126146f47deb3fdaeec5826b&language=en-US";
     }
 
@@ -164,13 +178,9 @@ function getTrailer(movieTrailer, media){
     fetch(trailerurl).then((response) => {return response.json()}).then((data) => 
     {
         const trailers = data.results;
-        console.log(trailers);
         trailers.forEach(element => {
             if(element.site == "YouTube" && element.type == "Trailer"){
-                console.log(element.key);
-                youtubeUrl += element.key+"?&autoplay=1";
-                console.log(youtubeUrl);
-                
+                youtubeUrl += element.key+"?&autoplay=1";                
                 Swal.fire({
                     html:
                     `
@@ -190,4 +200,5 @@ function getTrailer(movieTrailer, media){
             }
         });
     });
+}
 }
